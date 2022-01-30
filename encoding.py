@@ -6,14 +6,50 @@ import argparse
 import json
 
 from feature_spaces import _FEATURE_CONFIG, get_feature_space
-from utils import get_story_wordseqs, apply_zscore_and_hrf, get_response
+from ridge_utils.npp import zscore
+from ridge_utils.utils import make_delayed
 from ridge_utils.ridge import bootstrap_ridge, ridge
+
+
+def apply_zscore_and_hrf(stories, downsampled_feat, trim, ndelays):
+	"""Get (z-scored and delayed) stimulus for train and test stories.
+	The stimulus matrix is delayed (typically by 2,4,6,8 secs) to estimate the
+	hemodynamic response function with a Finite Impulse Response model.
+
+	Args:
+		stories: List of stimuli stories.
+
+	Variables:
+		downsampled_feat (dict): Downsampled feature vectors for all stories.
+		trim: Trim downsampled stimulus matrix.
+		delays: List of delays for Finite Impulse Response (FIR) model.
+
+	Returns:
+		delstim: <float32>[TRs, features * ndelays]
+	"""
+	stim = [zscore(downsampled_feat[s][5+trim:-trim]) for s in stories]
+	stim = np.vstack(stim)
+	delays = range(1, ndelays+1)
+	delstim = make_delayed(stim, delays)
+	return delstim
+
+def get_response(stories, subject):
+	"""Get the subject's fMRI response for stories."""
+	base = 'derivative/preprocessed_data/%s' % subject
+	resp = []
+	for story in stories:
+		resp_path = os.path.join(base, '%s.hf5' % story)
+		hf = h5py.File(resp_path, 'r')
+		resp.extend(hf['resp'][:])
+		hf.close()
+	return np.array(resp)
+
 
 if __name__ == '__main__':
 	parser = argparse.ArgumentParser()
 	parser.add_argument('--subject', type=str, required=True)
 	parser.add_argument('--feature', type=str, required=True)
-	parser.add_argument('--last_session', type=int, default=5)
+	parser.add_argument('--sessions', type=int, default=5)
 	parser.add_argument('--trim', type=int, default=5)
 	parser.add_argument('--ndelays', type=int, default=4)
 	parser.add_argument('--nboots', type=int, default=50)
@@ -26,40 +62,41 @@ if __name__ == '__main__':
 	globals().update(args.__dict__)
 
 	fs = ' '.join(_FEATURE_CONFIG.keys())
-	assert feature in _FEATURE_CONFIG.keys(), 'Available feature spaces:' + fs
-	assert last_session <= 5 and last_session >= 1, '1 <= last session <= 5'
+	assert feature in _FEATURE_CONFIG.keys(),
+			'This feature sapcepace is not implemented! Available feature spaces:' + fs
+	assert np.all((sessions <=5) & (sessions >= 1)), '1 <= last session <= 5'
 
-	sessions = list(map(str, range(1, last_session+1)))
+	sessions = list(map(str, sessions))
 	with open('sess_to_story.json', 'r') as f:
-		sess_to_story = json.loads(f) 
-	allstories, Pstories = [], []
+		sess_to_story = json.load(f) 
+	train_stories, test_stories = [], []
 	for sess in sessions:
-		stories, test_story = sess_to_story[sess][0], sess_to_story[sess][1]
-		allstories.extend(stories)
-		if test_story not in Pstories:
-			Pstories.append(test_story)
-	Rstories = list(set(allstories) - set(Pstories))
+		stories, tstory = sess_to_story[sess][0], sess_to_story[sess][1]
+		train_stories.extend(stories)
+		if tstory not in test_stories:
+			test_stories.append(tstory)
+	assert len(set(train_stories) & set(test_stories)) == 0, 'Train - Test overlap!'
+	allstories = list(set(train_stories) | set(test_stories))
 
-	save_location = 'results/%s/%s' % (feature, subject)
+	save_location = os.path.join('results', feature, subject)
+	print('Saving encoding model & results too:', save_location)
 	if not os.path.exists(save_location):
 		os.makedirs(save_location)
 
-	wordseqs = get_story_wordseqs(allstories)
-
-	downsampled_feat = get_feature_space(feature, wordseqs)
+	downsampled_feat = get_feature_space(feature, allstories)
 	print('Stimulus & Response parameters:')
-	print('trim: %d, extra_trim: %d, ndelays: %d' % (trim, extra_trim, ndelays))
+	print('trim: %d, ndelays: %d' % (trim, ndelays))
 
 	# Delayed stimulus
-	delRstim = apply_zscore_and_hrf(Rstories, downsampled_feat, trim, ndelays)
+	delRstim = apply_zscore_and_hrf(train_stories, downsampled_feat, trim, ndelays)
 	print('delRstim: ', delRstim.shape)
-	delPstim = apply_zscore_and_hrf(Pstories, downsampled_feat, trim, ndelays)
+	delPstim = apply_zscore_and_hrf(test_stories, downsampled_feat, trim, ndelays)
 	print('delPstim: ', delPstim.shape)
 
 	# Response
-	zRresp = get_response(Rstories, subject, extra_trim)
+	zRresp = get_response(train_stories, subject)
 	print('zRresp: ', zRresp.shape)
-	zPresp = get_response(Pstories, subject, extra_trim)
+	zPresp = get_response(test_stories, subject)
 	print('zPresp: ', zPresp.shape)
 
 	# Ridge

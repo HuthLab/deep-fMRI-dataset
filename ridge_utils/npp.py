@@ -1,4 +1,4 @@
-"""This module contains one line functions that should, by all rights, by in numpy.
+"""This module contains one line functions that should, by all rights, be in numpy.
 """
 import numpy as np
 
