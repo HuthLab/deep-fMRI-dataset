@@ -10,7 +10,7 @@ from ridge_utils.stimulus_utils import load_textgrids, load_simulated_trfiles
 
 def get_story_wordseqs(stories):
 	grids = load_textgrids(stories)
-	with open('respdict.json', 'r') as f:
+	with open("respdict.json", "r") as f:
 		respdict = json.load(f)
 	trfiles = load_simulated_trfiles(respdict)
 	wordseqs = make_word_ds(grids, trfiles)
@@ -18,7 +18,7 @@ def get_story_wordseqs(stories):
 
 def get_story_phonseqs(stories):
 	grids = load_textgrids(stories)
-	with open('respdict.json', 'r') as f:
+	with open("respdict.json", "r") as f:
 		respdict = json.load(f)
 	trfiles = load_simulated_trfiles(respdict)
 	wordseqs = make_phoneme_ds(grids, trfiles)
@@ -54,13 +54,13 @@ def ph_to_articulate(ds, ph_2_art):
 		try:
 			articulate_ds.append(ph_2_art[ph])
 		except:
-			articulate_ds.append([''])
+			articulate_ds.append([""])
 	return articulate_ds
 
-articulates = ['bilabial','postalveolar','alveolar','dental','labiodental',
-			   'velar','glottal','palatal', 'plosive','affricative','fricative',
-			   'nasal','lateral','approximant','voiced','unvoiced','low', 'mid',
-			   'high','front','central','back']
+articulates = ["bilabial","postalveolar","alveolar","dental","labiodental",
+			   "velar","glottal","palatal", "plosive","affricative","fricative",
+			   "nasal","lateral","approximant","voiced","unvoiced","low", "mid",
+			   "high","front","central","back"]
 
 def histogram_articulates(ds, data, articulateset=articulates):
 	"""Histograms the articulates in the DataSequence [ds]."""
@@ -77,7 +77,7 @@ def get_articulation_vectors(allstories):
 	Returns:
 		Dictionary of {story: downsampled vectors}
 	"""
-	with open('articulationdict.json', 'r') as f:
+	with open("articulationdict.json", "r") as f:
 		artdict = json.load(f)
 	phonseqs = get_story_phonseqs(allstories) #(phonemes, phoneme_times, tr_times)
 	downsampled_arthistseqs = {}
@@ -102,7 +102,7 @@ def get_phonemerate_vectors(allstories):
 	Returns:
 		Dictionary of {story: downsampled vectors}
 	"""
-	with open('articulationdict.json', 'r') as f:
+	with open("articulationdict.json", "r") as f:
 		artdict = json.load(f)
 	phonseqs = get_story_phonseqs(allstories) #(phonemes, phoneme_times, tr_times)
 	downsampled_arthistseqs = {}
@@ -130,7 +130,7 @@ def get_wordrate_vectors(allstories):
 	Returns:
 		Dictionary of {story: downsampled vectors}
 	"""
-	eng1000 = SemanticModel.load('english1000sm.hf5')
+	eng1000 = SemanticModel.load("english1000sm.hf5")
 	wordseqs = get_story_wordseqs(allstories)
 	vectors = {}
 	for story in allstories:
@@ -152,7 +152,7 @@ def get_eng1000_vectors(allstories):
 	Returns:
 		Dictionary of {story: downsampled vectors}
 	"""
-	eng1000 = SemanticModel.load('english1000sm.hf5')
+	eng1000 = SemanticModel.load("english1000sm.hf5")
 	wordseqs = get_story_wordseqs(allstories)
 	vectors = {}
 	for story in allstories:
@@ -165,10 +165,10 @@ def get_eng1000_vectors(allstories):
 ############################################
 
 _FEATURE_CONFIG = {
-	'articulation': get_articulation_vectors,
-	'phonemerate': get_phonemerate_vectors,
-	'wordrate': get_wordrate_vectors,
-	'eng1000': get_eng1000_vectors,
+	"articulation": get_articulation_vectors,
+	"phonemerate": get_phonemerate_vectors,
+	"wordrate": get_wordrate_vectors,
+	"eng1000": get_eng1000_vectors,
 }
 
 def get_feature_space(feature, *args):
