@@ -6,46 +6,9 @@ import argparse
 import json
 import pathlib
 
+from encoding_utils import *
 from feature_spaces import _FEATURE_CONFIG, get_feature_space
-from ridge_utils.npp import zscore
-from ridge_utils.utils import make_delayed
-from ridge_utils.ridge import bootstrap_ridge, ridge
-
-
-def apply_zscore_and_hrf(stories, downsampled_feat, trim, ndelays):
-	"""Get (z-scored and delayed) stimulus for train and test stories.
-	The stimulus matrix is delayed (typically by 2,4,6,8 secs) to estimate the
-	hemodynamic response function with a Finite Impulse Response model.
-
-	Args:
-		stories: List of stimuli stories.
-
-	Variables:
-		downsampled_feat (dict): Downsampled feature vectors for all stories.
-		trim: Trim downsampled stimulus matrix.
-		delays: List of delays for Finite Impulse Response (FIR) model.
-
-	Returns:
-		delstim: <float32>[TRs, features * ndelays]
-	"""
-	stim = [zscore(downsampled_feat[s][5+trim:-trim]) for s in stories]
-	stim = np.vstack(stim)
-	delays = range(1, ndelays+1)
-	delstim = make_delayed(stim, delays)
-	return delstim
-
-def get_response(stories, subject):
-	"""Get the subject"s fMRI response for stories."""
-	main_path = pathlib.Path(__file__).parent.parent.resolve()
-	subject_dir = "data/ds003020/derivative/preprocessed_data/%s" % subject
-	base = os.path.join(main_path, subject_dir)
-	resp = []
-	for story in stories:
-		resp_path = os.path.join(base, "%s.hf5" % story)
-		hf = h5py.File(resp_path, "r")
-		resp.extend(hf["resp"][:])
-		hf.close()
-	return np.array(resp)
+from ridge_utils.ridge import bootstrap_ridge
 
 
 if __name__ == "__main__":
@@ -69,7 +32,7 @@ if __name__ == "__main__":
 	assert np.amax(sessions) <= 5 and np.amin(sessions) >=1, "1 <= session <= 5"
 
 	sessions = list(map(str, sessions))
-	with open("sess_to_story.json", "r") as f:
+	with open("em_data/sess_to_story.json", "r") as f:
 		sess_to_story = json.load(f) 
 	train_stories, test_stories = [], []
 	for sess in sessions:
