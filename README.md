@@ -5,11 +5,9 @@ To clone and use this dataset:
 * git clone git@github.com:HuthLab/deep-fMRI-dataset.git
 
 To download the preprocessed data:
-* cd into deep-dataset
-* run function utils.get_data()
+* `python scripts/load_dataset.py -download_preprocess`
 
-this function will create a data dir if it does not exist and will use datalad to download the data.
-It requires datalad is installed to run. 
+This function will create a `data` dir if it does not exist and will use datalad to download the data.
 
 The basic function to fit a model is encoding.py
 
