@@ -1,6 +1,7 @@
 import os
 import sys
 import numpy as np
+import json
 
 from ridge_utils.interpdata import lanczosinterp2D
 from ridge_utils.SemanticModel import SemanticModel

@@ -1,5 +1,8 @@
 import numpy as np
 import time
+import pathlib
+import os
+import h5py
 from multiprocessing.pool import ThreadPool
 
 from ridge_utils.npp import zscore, mcorr
