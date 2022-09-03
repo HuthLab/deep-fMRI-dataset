@@ -39,7 +39,7 @@ def get_response(stories, subject):
 	for story in stories:
 		resp_path = os.path.join(base, "%s.hf5" % story)
 		hf = h5py.File(resp_path, "r")
-		resp.extend(hf["resp"][:])
+		resp.extend(hf["data"][:])
 		hf.close()
 	return np.array(resp)
 
