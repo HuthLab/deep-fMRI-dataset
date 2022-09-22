@@ -11,15 +11,13 @@ then to intiallize:
 ``` 
 $ cd deep-fMRI-dataset
 $ pip install .
-    
-````
+```
 
 ### Downloading Data
 
 This toolbox can automatically download the preprocessed data for you by using
 ```
-$ python load_dataset.py -download_preprocess`
-
+$ python load_dataset.py -download_preprocess
 ```
 
 
@@ -34,7 +32,6 @@ To download the rest of the data separately you can use:
 $ datalad clone https://github.com/OpenNeuroDatasets/ds003020.git
 
 $ datalad get ds003020
-
 ```
 
 ### Fitting Models
