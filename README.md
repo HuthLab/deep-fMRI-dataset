@@ -44,3 +44,9 @@ $ python encoding.py --subject UTS03 --feature eng1000
 The other optional parameters that encoding.py takes such as sessions, ndelays, single_alpha allow the user to change the amount of data and regularization aspects of the linear regression used. 
 
 This function will then save model performance metrics and model weights as numpy arrays. 
+
+### Voxelwise Encoding Model Tutorials
+
+For more information about fitting voxelwise encoding models:
+- This [repo](https://github.com/HuthLab/speechmodeltutorial) has a tutorial for fitting semantic encoding models
+- Additionally this [repo](https://github.com/gallantlab/voxelwise_tutorials) has a wide selection of tutorials to fit encoding models
