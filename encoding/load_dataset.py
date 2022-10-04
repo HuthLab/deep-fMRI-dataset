@@ -21,7 +21,7 @@ if __name__ == "__main__":
 		os.system("mkdir data")
 		data_dir = os.path.join(main_dir, "data")
 	os.chdir(data_dir)
-	os.system("datalad clone git@github.com:OpenNeuroDatasets/ds003020.git")
+	os.system("datalad clone https://github.com/OpenNeuroDatasets/ds003020")
 	if args.download_preprocess == True:
 		os.chdir("ds003020")
 		os.system("datalad get derivative")
