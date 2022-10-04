@@ -4,9 +4,11 @@ import pathlib
 import os
 import h5py
 from multiprocessing.pool import ThreadPool
+from os.path import join, dirname
 
 from ridge_utils.npp import zscore, mcorr
 from ridge_utils.utils import make_delayed
+from feature_spaces import repo_dir, data_dir, em_data_dir
 
 def apply_zscore_and_hrf(stories, downsampled_feat, trim, ndelays):
 	"""Get (z-scored and delayed) stimulus for train and test stories.
@@ -33,7 +35,7 @@ def apply_zscore_and_hrf(stories, downsampled_feat, trim, ndelays):
 def get_response(stories, subject):
 	"""Get the subject"s fMRI response for stories."""
 	main_path = pathlib.Path(__file__).parent.parent.resolve()
-	subject_dir = "data/ds003020/derivative/preprocessed_data/%s" % subject
+	subject_dir = join(data_dir, "ds003020/derivative/preprocessed_data/%s" % subject)
 	base = os.path.join(main_path, subject_dir)
 	resp = []
 	for story in stories:

@@ -17,6 +17,7 @@ $ pip install .
 
 To automatically download the preprocessed data
 ```
+$ cd encoding
 $ python load_dataset.py -download_preprocess
 ```
 
@@ -38,7 +39,7 @@ It will automatically use the preprocessed data from the location that get_data 
 To fit a semantic encoding model (`eng1000`) for one subject (`UTS03`) and test it on held-out data:
 
 ```
-$ python encoding.py --subject UTS03 --feature eng1000
+$ python encoding/encoding.py --subject UTS03 --feature eng1000
 ```
 
 The other optional parameters that encoding.py takes such as sessions, ndelays, single_alpha allow the user to change the amount of data and regularization aspects of the linear regression used. 

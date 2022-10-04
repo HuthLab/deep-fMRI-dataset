@@ -2,24 +2,28 @@ import os
 import sys
 import numpy as np
 import json
+from os.path import join, dirname
 
 from ridge_utils.interpdata import lanczosinterp2D
 from ridge_utils.SemanticModel import SemanticModel
 from ridge_utils.dsutils import make_semantic_model, make_word_ds, make_phoneme_ds
 from ridge_utils.stimulus_utils import load_textgrids, load_simulated_trfiles
 
+repo_dir = join(dirname(dirname(os.path.abspath(__file__))))
+em_data_dir = join(repo_dir, 'em_data')
+data_dir = join(repo_dir, 'encoding', 'data')
 
 def get_story_wordseqs(stories):
-	grids = load_textgrids(stories)
-	with open("data/ds003020/derivative/respdict.json", "r") as f:
+	grids = load_textgrids(stories, data_dir)
+	with open(join(data_dir, "ds003020/derivative/respdict.json"), "r") as f:
 		respdict = json.load(f)
 	trfiles = load_simulated_trfiles(respdict)
 	wordseqs = make_word_ds(grids, trfiles)
 	return wordseqs
 
 def get_story_phonseqs(stories):
-	grids = load_textgrids(stories)
-	with open("data/ds003020/derivative/respdict.json", "r") as f:
+	grids = load_textgrids(stories, data_dir)
+	with open(join(data_dir, "ds003020/derivative/respdict.json"), "r") as f:
 		respdict = json.load(f)
 	trfiles = load_simulated_trfiles(respdict)
 	wordseqs = make_phoneme_ds(grids, trfiles)
@@ -78,7 +82,7 @@ def get_articulation_vectors(allstories):
 	Returns:
 		Dictionary of {story: downsampled vectors}
 	"""
-	with open("em_data/articulationdict.json", "r") as f:
+	with open(join(em_data_dir, "articulationdict.json"), "r") as f:
 		artdict = json.load(f)
 	phonseqs = get_story_phonseqs(allstories) #(phonemes, phoneme_times, tr_times)
 	downsampled_arthistseqs = {}
@@ -103,7 +107,7 @@ def get_phonemerate_vectors(allstories):
 	Returns:
 		Dictionary of {story: downsampled vectors}
 	"""
-	with open("articulationdict.json", "r") as f:
+	with open(join(em_data_dir, "articulationdict.json"), "r") as f:
 		artdict = json.load(f)
 	phonseqs = get_story_phonseqs(allstories) #(phonemes, phoneme_times, tr_times)
 	downsampled_arthistseqs = {}
@@ -131,7 +135,7 @@ def get_wordrate_vectors(allstories):
 	Returns:
 		Dictionary of {story: downsampled vectors}
 	"""
-	eng1000 = SemanticModel.load("em_data/english1000sm.hf5")
+	eng1000 = SemanticModel.load(join(em_data_dir, "english1000sm.hf5"))
 	wordseqs = get_story_wordseqs(allstories)
 	vectors = {}
 	for story in allstories:
@@ -153,7 +157,7 @@ def get_eng1000_vectors(allstories):
 	Returns:
 		Dictionary of {story: downsampled vectors}
 	"""
-	eng1000 = SemanticModel.load("em_data/english1000sm.hf5")
+	eng1000 = SemanticModel.load(join(em_data_dir, "english1000sm.hf5"))
 	wordseqs = get_story_wordseqs(allstories)
 	vectors = {}
 	for story in allstories:
