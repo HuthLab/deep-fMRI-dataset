@@ -11,7 +11,7 @@ import logging
 from encoding_utils import *
 from feature_spaces import _FEATURE_CONFIG, get_feature_space
 from ridge_utils.ridge import bootstrap_ridge
-from feature_spaces import repo_dir, em_data_dir, data_dir
+from config import  REPO_DIR, EM_DATA_DIR
 
 
 
@@ -39,7 +39,7 @@ if __name__ == "__main__":
 	assert np.amax(sessions) <= 5 and np.amin(sessions) >=1, "1 <= session <= 5"
 
 	sessions = list(map(str, sessions))
-	with open(join(em_data_dir, "sess_to_story.json"), "r") as f:
+	with open(join(EM_DATA_DIR, "sess_to_story.json"), "r") as f:
 		sess_to_story = json.load(f) 
 	train_stories, test_stories = [], []
 	for sess in sessions:
@@ -50,7 +50,7 @@ if __name__ == "__main__":
 	assert len(set(train_stories) & set(test_stories)) == 0, "Train - Test overlap!"
 	allstories = list(set(train_stories) | set(test_stories))
 
-	save_location = join(repo_dir, "results", feature, subject)
+	save_location = join(REPO_DIR, "results", feature, subject)
 	print("Saving encoding model & results to:", save_location)
 	os.makedirs(save_location, exist_ok=True)
 
