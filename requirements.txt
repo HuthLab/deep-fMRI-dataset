@@ -1,2 +1,5 @@
-datalad
+datalad 
 pathlib
+h5py
+tables
+numpy

@@ -1,12 +1,12 @@
 import os
 import numpy as np
+from os.path import join, dirname
 
 from ridge_utils.textgrid import TextGrid
 
-
-def load_textgrids(stories):
+def load_textgrids(stories, data_dir: str):
     """ TODO (shailee): Add description."""
-    base = "data/ds003020/derivative/TextGrids"
+    base = join(data_dir, "ds003020/derivative/TextGrids")
     grids = {}
     for story in stories:
         grid_path = os.path.join(base, "%s.TextGrid"%story)

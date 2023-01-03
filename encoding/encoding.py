@@ -5,10 +5,14 @@ import h5py
 import argparse
 import json
 import pathlib
+from os.path import join, dirname
+import logging
 
 from encoding_utils import *
 from feature_spaces import _FEATURE_CONFIG, get_feature_space
 from ridge_utils.ridge import bootstrap_ridge
+from config import  REPO_DIR, EM_DATA_DIR
+
 
 
 if __name__ == "__main__":
@@ -24,6 +28,9 @@ if __name__ == "__main__":
 	parser.add_argument("--singcutoff", type=float, default=1e-10)
 	parser.add_argument("-use_corr", action="store_true")
 	parser.add_argument("-single_alpha", action="store_true")
+	logging.basicConfig(level=logging.INFO)
+
+
 	args = parser.parse_args()
 	globals().update(args.__dict__)
 
@@ -32,7 +39,7 @@ if __name__ == "__main__":
 	assert np.amax(sessions) <= 5 and np.amin(sessions) >=1, "1 <= session <= 5"
 
 	sessions = list(map(str, sessions))
-	with open("em_data/sess_to_story.json", "r") as f:
+	with open(join(EM_DATA_DIR, "sess_to_story.json"), "r") as f:
 		sess_to_story = json.load(f) 
 	train_stories, test_stories = [], []
 	for sess in sessions:
@@ -43,10 +50,9 @@ if __name__ == "__main__":
 	assert len(set(train_stories) & set(test_stories)) == 0, "Train - Test overlap!"
 	allstories = list(set(train_stories) | set(test_stories))
 
-	save_location = os.path.join("results", feature, subject)
-	print("Saving encoding model & results too:", save_location)
-	if not os.path.exists(save_location):
-		os.makedirs(save_location)
+	save_location = join(REPO_DIR, "results", feature, subject)
+	print("Saving encoding model & results to:", save_location)
+	os.makedirs(save_location, exist_ok=True)
 
 	downsampled_feat = get_feature_space(feature, allstories)
 	print("Stimulus & Response parameters:")

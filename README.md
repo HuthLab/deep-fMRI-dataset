@@ -1,4 +1,4 @@
-# deep-fMRI-dataset
+python# deep-fMRI-dataset
 Code accompanying data release of natural language listening data from 5 fMRI sessions for each of 8 subjects (LeBel et al.) that can be found at [openneuro](https://openneuro.org/datasets/ds003020).
 
 ### To install the toolbox
@@ -15,12 +15,16 @@ $ pip install .
 
 ### Downloading Data
 
-To automatically download the preprocessed data
+First datalad needs to be installed which can be done with:
+`sudo apt get install datalad`
+
+Then, to automatically download the preprocessed data
 ```
+$ cd encoding
 $ python load_dataset.py -download_preprocess
 ```
 
-This function will create a `data` dir if it does not exist and will use [datalad](https://github.com/datalad/datalad) to download the preprocessed data as well as feature spaces needed for fitting [semantic encoding models](https://www.nature.com/articles/nature17637). It will download ~20gb of data. 
+This function will create a `data` dir if it does not exist and will use [datalad](https://github.com/datalad/datalad) to download the preprocessed data as well as feature spaces needed for fitting [semantic encoding models](https://www.nature.com/articles/nature17637). It will download ~20gb of data. Alternately, you can supply a different download location using the `--location DATA_DIR` flag. If you choose to change the default location of the data, make sure to update the `config.py` file with the new location.
 
 To download the raw data you can use:
 
@@ -38,7 +42,7 @@ It will automatically use the preprocessed data from the location that get_data 
 To fit a semantic encoding model (`eng1000`) for one subject (`UTS03`) and test it on held-out data:
 
 ```
-$ python encoding.py --subject UTS03 --feature eng1000
+$ python encoding/encoding.py --subject UTS03 --feature eng1000
 ```
 
 The other optional parameters that encoding.py takes such as sessions, ndelays, single_alpha allow the user to change the amount of data and regularization aspects of the linear regression used. 
