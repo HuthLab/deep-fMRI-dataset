@@ -1,4 +1,4 @@
-python# deep-fMRI-dataset
+# deep-fMRI-dataset
 Code accompanying data release of natural language listening data from 5 fMRI sessions for each of 8 subjects (LeBel et al.) that can be found at [openneuro](https://openneuro.org/datasets/ds003020).
 
 ### To install the toolbox
