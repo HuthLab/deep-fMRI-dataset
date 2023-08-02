@@ -33,11 +33,6 @@
             "scheme": "doi",
             "identifier": "10.1101/2022.09.22.509104",
             "relation": "isDescribedBy"
-        },
-        {
-            "scheme": "doi", 
-            "identifier": "10.5281/zenodo.8003167", 
-            "relation": "isVersionOf"
         }
     ]
 }
