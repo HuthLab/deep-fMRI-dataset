@@ -1,0 +1,43 @@
+{
+    "description": "Code accompanying data release of natural language listening fMRI data (LeBel et al.)", 
+    "license": "MIT", 
+    "title": "HuthLab/deep-fMRI-dataset", 
+    "version": "1.0.2", 
+    "upload_type": "software", 
+    "publication_date": "2023-08-02", 
+    "creators": [
+        {
+            "affiliation": "@HuthLab", 
+            "name": "Shailee Jain"
+        }, 
+        {
+            "name": "Amanda LeBel"
+        }, 
+        {
+            "affiliation": "The University of Texas at Austin", 
+            "name": "Alex Huth"
+        }, 
+        {
+            "affiliation": "Senior researcher", 
+            "name": "Chandan Singh"
+        }
+    ], 
+    "access_right": "open", 
+    "related_identifiers": [
+        {
+            "scheme": "url", 
+            "identifier": "https://github.com/HuthLab/deep-fMRI-dataset/tree/1.0.2", 
+            "relation": "isSupplementTo"
+        }, 
+        {
+            "scheme": "doi",
+            "identifier": "10.1101/2022.09.22.509104",
+            "relation": "isSupplementTo"
+        },
+        {
+            "scheme": "doi", 
+            "identifier": "10.5281/zenodo.8003167", 
+            "relation": "isVersionOf"
+        }
+    ]
+}
