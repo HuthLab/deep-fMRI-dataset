@@ -32,7 +32,7 @@
         {
             "scheme": "doi",
             "identifier": "10.1101/2022.09.22.509104",
-            "relation": "isSupplementTo"
+            "relation": "isDescribedBy"
         },
         {
             "scheme": "doi", 
